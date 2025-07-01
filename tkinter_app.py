@@ -493,7 +493,7 @@ def check_and_install_dependencies():
                 print(f"安装过程中发生错误: {str(e)}")
                 return False
         else:
-            print("所有依赖包都已安装 ✓")
+            print("✓ 所有依赖包都已安装")
             return True
             
     except Exception as e:
@@ -617,7 +617,7 @@ if __name__ == "__main__":
     check_and_create_directories()
     
     # 初始消息
-    log_text.insert(tk.END, "Spectrum分析工具已启动，点击'开始处理'按钮开始处理音乐文件\n")
+    log_text.insert(tk.END, "工具已启动，点击'开始处理'按钮开始处理音乐文件\n")
     log_text.insert(tk.END, "请确保'music_stft'目录中已放入要处理的音频文件\n")
     log_text.see(tk.END)
     
