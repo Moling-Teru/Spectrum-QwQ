@@ -1,1 +1,0 @@
-pip install numpy librosa pandas moviepy matplotlib -i https://pypi.tuna.tsinghua.edu.cn/simple

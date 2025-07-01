@@ -9,6 +9,7 @@ import shutil
 import threading
 from concurrent.futures import ThreadPoolExecutor
 import queue
+import subprocess
 import psutil
 import music_format
 import stft_unified
@@ -444,6 +445,61 @@ def stop_processing():
         pause_button.config(state=tk.DISABLED)
         status_label.config(text="状态: 已停止")
 
+def check_and_install_dependencies():
+    """检查并安装所需的依赖包"""
+    print("正在检查依赖包...")
+    
+    # 读取requirements.txt文件
+    requirements_file = 'requirements.txt'
+    if not os.path.exists(requirements_file):
+        print(f"警告: 未找到 {requirements_file} 文件")
+        return True
+    
+    try:
+        with open(requirements_file, 'r', encoding='utf-8') as f:
+            required_packages = [line.strip() for line in f if line.strip() and not line.startswith('#')]
+        
+        missing_packages = []
+        
+        # 检查每个包是否已安装
+        for package in required_packages:
+            try:
+                print(f"✓ {package} 已安装")
+            except ImportError:
+                print(f"✗ {package} 未安装")
+                missing_packages.append(package)
+        
+        # 如果有缺失的包，则安装它们
+        if missing_packages:
+            print(f"\n发现缺失的依赖包: {', '.join(missing_packages)}")
+            print("正在安装缺失的依赖包...")
+            
+            try:
+                # 执行 pip install -r requirements.txt
+                result = subprocess.run(
+                    [sys.executable, '-m', 'pip', 'install', '-r', requirements_file],
+                    capture_output=True,
+                    text=True,
+                    check=True
+                )
+                print("依赖包安装成功!")
+                print(result.stdout)
+                return True
+            except subprocess.CalledProcessError as e:
+                print(f"依赖包安装失败: {e}")
+                print(f"错误输出: {e.stderr}")
+                return False
+            except Exception as e:
+                print(f"安装过程中发生错误: {str(e)}")
+                return False
+        else:
+            print("所有依赖包都已安装 ✓")
+            return True
+            
+    except Exception as e:
+        print(f"检查依赖包时发生错误: {str(e)}")
+        return False
+
 def on_closing():
     """关闭窗口时的处理"""
     global is_running
@@ -458,6 +514,11 @@ def on_closing():
 # 主程序入口
 if __name__ == "__main__":
 #def main():
+    # 检查并安装依赖包
+    if not check_and_install_dependencies():
+        print("\n依赖包检查/安装失败，程序可能无法正常运行")
+        input("按回车键继续...")
+    
     # 创建主窗口
     root = tk.Tk()
     root.title("Spectrum分析工具")
