@@ -72,7 +72,7 @@ print("已保存：", csv_path)
 # 6. 画图 -----------------------------------------------------
 time=int(get_duration_librosa(wav_path))
 width=max(time//4,10)
-plt.figure(figsize=(width,6))          #等待长度动态更改修复
+plt.figure(figsize=(width,16))          #等待长度动态更改修复
 plt.imshow(spec_db,
            origin="lower", aspect="auto",
            extent=[float(t[0]), float(t[-1]),

@@ -83,7 +83,7 @@ def generate_spectrogram_3000Hz_3Hz(wav_path):
     # 5. 图像尺寸设置 -----------------------------------------
     # 根据频率范围调整图像尺寸 (Using logic similar to original)
     # For 3000Hz, use the 4000Hz logic
-    width, height = max(time_duration//4, 8), 10
+    width, height = max(time_duration//4, 8), 16
 
     # 6. 保存CSV (Skipped as per requirement) -------------------
     # No CSV saving for this specific function
