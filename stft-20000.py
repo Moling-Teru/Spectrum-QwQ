@@ -73,5 +73,5 @@ plt.title(f"Log-Amplitude Spectrogram "
           f"({step_hz} Hz × {hop_ms} ms, ≤{max_freq} Hz)")
 plt.tight_layout()
 pic_path=path+'/data-20000.png'
-plt.savefig(pic_path, dpi=200, bbox_inches="tight")
+plt.savefig(pic_path, dpi=150, bbox_inches="tight")
 print("已保存：", pic_path)
