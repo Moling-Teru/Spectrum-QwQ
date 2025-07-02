@@ -47,6 +47,10 @@ pip3 install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple
 
 暂停功能不是很完善，如果有急事要暂停，直接停止吧。
 
+>[!IMPORTANT]
+> 
+>请使用网易云，不要使用QQ音乐。QQ音乐的加密算法和网易云不一样，会导致解密失败。
+
 代码如果有更新，请运行
 ``` bash
 git pull
