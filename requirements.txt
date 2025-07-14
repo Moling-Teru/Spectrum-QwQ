@@ -8,3 +8,4 @@ matplotlib
 pandas
 scipy
 psutil
+ffmpeg-python
