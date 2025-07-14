@@ -7,7 +7,8 @@ For senior high school's project study. Don't mention the details if the program
 
 能够看到这个文档，证明你的网络没有问题。
 
-请确认你已经准备好了 **Git** 和 **Python 3.12** 的环境。
+>[!IMPORTANT]
+>请确认你已经准备好了 **Git** 和 **Python 3.12** 的环境。
 
 打开IDE（推荐Pycharm），选择克隆仓库。
 
@@ -62,3 +63,6 @@ git pull
 git config --global user.name "你的名字"
 git config --global user.email "你的邮箱"
 ```
+
+>代码输入方法：
+>同时按下win+R键，在打开的“运行”窗口中输入cmd，然后在新打开的窗口中输入以上命令。
