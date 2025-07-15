@@ -500,6 +500,18 @@ def check_and_install_dependencies():
         print(f"检查依赖包时发生错误: {str(e)}")
         return False
 
+def check_ffmpeg_installed():
+    """检查 ffmpeg 是否已经安装"""
+    ffmpeg_installed = False
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+    # 检查脚本目录下的 ffmpeg 子目录
+    if os.path.isdir(os.path.join(script_dir, 'ffmpeg')) and os.path.isfile(r'C:\Windows\ffmpeg.exe'):
+        ffmpeg_installed = True
+    # 检查 C:\Windows 目录下的 ffmpeg.exe
+    if not ffmpeg_installed:
+        print("错误: 未检测到 ffmpeg。请先安装 ffmpeg 或将其放到脚本目录下的 'ffmpeg' 子目录中，或在 C:\Windows 下放置 ffmpeg.exe")
+        sys.exit(1)
+
 def on_closing():
     """关闭窗口时的处理"""
     global is_running
@@ -518,7 +530,10 @@ if __name__ == "__main__":
     if not check_and_install_dependencies():
         print("\n依赖包检查/安装失败，程序可能无法正常运行")
         input("按回车键继续...")
-    
+
+    # 检查 ffmpeg 是否已经安装
+    check_ffmpeg_installed()
+
     # 创建主窗口
     root = tk.Tk()
     root.title("Spectrum分析工具")
@@ -617,7 +632,7 @@ if __name__ == "__main__":
     check_and_create_directories()
     
     # 初始消息
-    log_text.insert(tk.END, "工具已启动，点击'开始处理'按钮开始处理音乐文件\n")
+    log_text.insert(tk.END, "工具已启动，点击'开��处理'按钮开始处理音乐文件\n")
     log_text.insert(tk.END, "请确保'music_stft'目录中已放入要处理的音频文件\n")
     log_text.see(tk.END)
     
