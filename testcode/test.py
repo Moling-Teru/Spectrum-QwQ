@@ -1,5 +1,11 @@
 import os
-folder_path='music_stft'
-ext='*.mp3'
-n=os.path.join(folder_path, "**", ext)
-print(n)
+ffmpeg_path = os.path.expandvars(r"%ProgramFiles%\\ffmpeg\\bin")
+location=os.path.dirname(os.path.abspath(__file__))+'\\ffmpeg'
+#if not os.path.exists(location + '\\ffmpeg'):
+#    os.makedirs(location + '\\ffmpeg')
+print(ffmpeg_path)
+print(location)
+print('\\\\'.replace('\\\\', '\\'))
+
+
+print("setx", "PATH", f'"%PATH%;{location+'\\bin'}"', "/m")
