@@ -10,6 +10,7 @@ import threading
 from concurrent.futures import ThreadPoolExecutor
 import queue
 import subprocess
+import platform
 import psutil
 import music_format
 import stft_unified
@@ -104,8 +105,14 @@ def open_folder(folder_path):
         else:
             log_queue.put(f"打开文件夹: {folder_path}\n")
         
-        # 在Windows上使用os.startfile打开文件夹
-        os.startfile(os.path.abspath(folder_path))
+        # 跨平台文件夹打开方式
+        system = platform.system()
+        if system == "Windows":
+            os.startfile(os.path.abspath(folder_path))
+        elif system == "Darwin":  # macOS
+            subprocess.run(["open", folder_path])
+        else:  # Linux和其他Unix系统
+            subprocess.run(["xdg-open", folder_path])
     except Exception as e:
         log_queue.put(f"打开文件夹 {folder_path} 失败: {str(e)}\n")
 
@@ -261,7 +268,7 @@ def worker_function():
         
         # 记录开始时间
         start_time = t.time()
-        
+
         # 使用线程池处理文件
         counter = 0
         thread_executor = ThreadPoolExecutor(max_workers=max_workers)
@@ -445,71 +452,58 @@ def stop_processing():
         pause_button.config(state=tk.DISABLED)
         status_label.config(text="状态: 已停止")
 
-def check_and_install_dependencies():
-    """检查并安装所需的依赖包"""
-    print("正在检查依赖包...")
-    
-    # 读取requirements.txt文件
-    requirements_file = 'requirements.txt'
-    if not os.path.exists(requirements_file):
-        print(f"警告: 未找到 {requirements_file} 文件")
-        return True
-    
-    try:
-        with open(requirements_file, 'r', encoding='utf-8') as f:
-            required_packages = [line.strip() for line in f if line.strip() and not line.startswith('#')]
-        
-        missing_packages = []
-        
-        # 检查每个包是否已安装
-        for package in required_packages:
-            try:
-                print(f"✓ {package} 已安装")
-            except ImportError:
-                print(f"✗ {package} 未安装")
-                missing_packages.append(package)
-        
-        # 如果有缺失的包，则安装它们
-        if missing_packages:
-            print(f"\n发现缺失的依赖包: {', '.join(missing_packages)}")
-            print("正在安装缺失的依赖包...")
-            
-            try:
-                # 执行 pip install -r requirements.txt
-                result = subprocess.run(
-                    [sys.executable, '-m', 'pip', 'install', '-r', requirements_file],
-                    capture_output=True,
-                    text=True,
-                    check=True
-                )
-                print("依赖包安装成功!")
-                print(result.stdout)
-                return True
-            except subprocess.CalledProcessError as e:
-                print(f"依赖包安装失败: {e}")
-                print(f"错误输出: {e.stderr}")
-                return False
-            except Exception as e:
-                print(f"安装过程中发生错误: {str(e)}")
-                return False
-        else:
-            print("✓ 所有依赖包都已安装")
-            return True
-            
-    except Exception as e:
-        print(f"检查依赖包时发生错误: {str(e)}")
-        return False
-
-def check_ffmpeg_installed():
-    """检查 ffmpeg 是否已经安装"""
-    ffmpeg_installed = False
+def check_ffmpeg():
+    """检查FFmpeg是否可用（跨平台）"""
     script_dir = os.path.dirname(os.path.abspath(__file__))
-    # 检查脚本目录下的 ffmpeg 子目录
-    if os.path.isdir(os.path.join(script_dir, 'ffmpeg')) and os.path.isfile(r'C:\Windows\ffmpeg.exe'):
-        ffmpeg_installed = True
-    # 检查 C:\Windows 目录下的 ffmpeg.exe
-    if not ffmpeg_installed:
-        print("错误: 未检测到 ffmpeg。请先安装 ffmpeg 或将其放到脚本目录下的 'ffmpeg' 子目录中，或在 C:\Windows 下放置 ffmpeg.exe")
+
+    # 检查多个可能的FFmpeg位置
+    possible_paths = [
+        # 当前目录下的ffmpeg子目录
+        os.path.join(script_dir, 'ffmpeg', 'bin', 'ffmpeg'),
+        os.path.join(script_dir, 'ffmpeg', 'ffmpeg'),
+        # 系统PATH中的ffmpeg
+        'ffmpeg'
+    ]
+
+    # Windows特定路径
+    if platform.system() == "Windows":
+        possible_paths.extend([
+            os.path.join(script_dir, 'ffmpeg', 'bin', 'ffmpeg.exe'),
+            os.path.join(script_dir, 'ffmpeg', 'ffmpeg.exe'),
+            r'C:\Windows\ffmpeg.exe'
+        ])
+
+    for ffmpeg_path in possible_paths:
+        try:
+            # 尝试运行ffmpeg -version来检查是否可用
+            result = subprocess.run(
+                [ffmpeg_path, '-version'],
+                capture_output=True,
+                text=True,
+                timeout=5
+            )
+            if result.returncode == 0:
+                return True
+        except (subprocess.TimeoutExpired, FileNotFoundError, OSError):
+            continue
+
+    return False
+
+def check_dependencies():
+    """检查依赖环境"""
+    script_dir = os.path.dirname(os.path.abspath(__file__))
+
+    if not check_ffmpeg():
+        system = platform.system()
+        if system == "Windows":
+            error_msg = "错误: 未检测到 ffmpeg。请先安装 ffmpeg 或将其放到脚本目录下的 'ffmpeg' 子目录中，或在 C:\\Windows 下放置 ffmpeg.exe"
+        else:
+            error_msg = "错误: 未检测到 ffmpeg。请安装 ffmpeg：\n" + \
+                       "Ubuntu/Debian: sudo apt install ffmpeg\n" + \
+                       "CentOS/RHEL: sudo yum install ffmpeg\n" + \
+                       "macOS: brew install ffmpeg"
+        print(error_msg)
+        input("按回车键继续...")
         sys.exit(1)
 
 def on_closing():
@@ -527,12 +521,12 @@ def on_closing():
 if __name__ == "__main__":
 #def main():
     # 检查并安装依赖包
-    if not check_and_install_dependencies():
+    if not check_dependencies():
         print("\n依赖包检查/安装失败，程序可能无法正常运行")
         input("按回车键继续...")
 
     # 检查 ffmpeg 是否已经安装
-    check_ffmpeg_installed()
+    check_ffmpeg()
 
     # 创建主窗口
     root = tk.Tk()
@@ -632,7 +626,7 @@ if __name__ == "__main__":
     check_and_create_directories()
     
     # 初始消息
-    log_text.insert(tk.END, "工具已启动，点击'开��处理'按钮开始处理音乐文件\n")
+    log_text.insert(tk.END, "工具已启动，点击'开始处理'按钮开始处理音乐文件\n")
     log_text.insert(tk.END, "请确保'music_stft'目录中已放入要处理的音频文件\n")
     log_text.see(tk.END)
     

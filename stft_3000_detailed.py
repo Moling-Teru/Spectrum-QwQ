@@ -28,8 +28,9 @@ def generate_spectrogram_3000Hz_3Hz(wav_path):
     step_hz = 3
     hop_ms = 50 # Keep consistent hop_ms
 
-    # 创建输出目录
-    path = f"data_stft/{os.path.basename(wav_path).rsplit('.',1)[0]}"
+    # 创建输出目录 - 使用os.path.join确保跨平台兼容性
+    base_name = os.path.basename(wav_path).rsplit('.',1)[0]
+    path = os.path.join("data_stft", base_name)
     os.makedirs(path, exist_ok=True)
 
     # 获取音频时长（用于图像尺寸设置）

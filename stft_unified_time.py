@@ -34,9 +34,8 @@ def generate_spectrogram(wav_path, output_dir, freq_ranges=None, hop_ms=50, step
     if freq_ranges is None:
         freq_ranges = [4000, 8000, 20000]
 
-    # 使用传入的输出目录
-    path = output_dir
-    os.makedirs(path, exist_ok=True)
+    # 使用os.path.join确保跨平台兼容性
+    os.makedirs(output_dir, exist_ok=True)
 
     # 获取音频时长（用于图像尺寸设置）
     time_duration = int(get_duration_librosa(wav_path))

@@ -31,13 +31,13 @@ def calculate_frequency_energies(audio_file, freq_min=0, freq_max=4000, freq_ste
     # 更合理的帧移设置，使用帧移25ms (更适合1Hz分辨率的分析)
     hop_ms = 25
     hop_length = int(sr * hop_ms / 1000)  # 将毫秒转为样本数
-    
+
     # 窗口大小设置为采样率，这样可以提供1Hz的频率分辨率
     window_size = int(round(sr / freq_step))  # 1 Hz 分辨率
     window_size += window_size % 2  # 确保窗口大小为偶数
 
     print(f"窗口大小: {window_size}, 帧移: {hop_length}")
-    
+
     # 执行STFT
     D = librosa.stft(y_mono, n_fft=window_size, hop_length=hop_length, window='hann')
 
@@ -102,15 +102,18 @@ def main(audio):
         print(f"警告: 文件不是.wav格式，可能无法正确处理")
 
     # 生成输出文件名（基于输入文件名）
-    base_name = f"data_stft/{audio_file.split('/')[1].rsplit('.', 1)[0]}"
-    #base_name = os.path.splitext(audio_file)[0]
-    csv_output = f"{base_name}/frequency_energy.csv"
+    # 获取输出路径 - 使用os.path.join确保跨平台兼容性
+    base_name = os.path.basename(audio_file).rsplit('.', 1)[0]
+    output_dir = os.path.join("data_stft", base_name)
+    output_path = os.path.join(output_dir, "power.csv")
 
     # 计算频率能量
     print(f"Song{audio_file}- 开始分析音频文件...")
     frequencies, energies = calculate_frequency_energies(audio_file)
 
-    # 保存CSV
-    save_to_csv(frequencies, energies, csv_output)
+    # 保存到CSV
+    save_to_csv(frequencies, energies, output_path)
 
+    print(f"能量数据已保存到: {output_path}")
     print(f"Song{audio_file}- 分析完成!")
+    main(audio_file)

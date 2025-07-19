@@ -5,6 +5,7 @@ import time as t
 import sys
 import shutil
 import multiprocessing as mp
+import platform
 import power_aweighted,stft_unified,stft_3000_detailed,power,power_plt,music_format
 
 
@@ -33,38 +34,44 @@ def process_music_file(name):
     """处理单个音乐文件的函数，使用全局共享变量"""
     try:
         time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        # 移除在Linux中不合法的文件名字符，保持跨平台兼容性
         name_new = re.sub(r'[<>:"/\\|?*]', '', name).rsplit('.', 1)[0]  # 文件夹名称
 
-        with open(f'log_stft/log_{name_new}.txt', 'a', encoding='utf-8') as file:
+        # 使用os.path.join确保路径分隔符正确
+        log_file_path = os.path.join('log_stft', f'log_{name_new}.txt')
+        with open(log_file_path, 'a', encoding='utf-8') as file:
             file.write(f'{time}: Program Starting.\n')
-            folder = f'data_stft/{name_new}'  # 目标文件夹
+            folder = os.path.join('data_stft', name_new)  # 目标文件夹
             os.makedirs(folder, exist_ok=True)
 
             # 执行三个STFT处理
             # 替换原来的三个单独STFT处理
-            stft_unified.main(f"music_stft/{name}")  
+            input_file = os.path.join("music_stft", name)
+            stft_unified.main(input_file)
             time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             file.write(f'{time}: STFT Finished!\n')
 
-            stft_3000_detailed.main(f"music_stft/{name}")  
+            stft_3000_detailed.main(input_file)
             time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             file.write(f'{time}: STFT-3000 Finished!\n')
 
             # 新增能量计算
-            power.main(f"music_stft/{name}")  
+            power.main(input_file)
             time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             file.write(f'{time}: STFT-Power-Csv Finished!\n')
 
-            power_plt.main(f"music_stft/{name}")  
+            power_plt.main(input_file)
             time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             file.write(f'{time}: STFT-Power-Plt Finished!\n')
 
-            power_aweighted.main(f"music_stft/{name}")
+            power_aweighted.main(input_file)
             time = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
             file.write(f'{time}: STFT-Power-Plt-A-Weighting Finished!\n')
 
         # 移动原始文件到处理后的目录
-        shutil.move(f'music_stft/{name}', f'data_stft/{name_new}')
+        source_path = os.path.join('music_stft', name)
+        dest_path = os.path.join('data_stft', name_new)
+        shutil.move(source_path, dest_path)
 
         # 更新计数器并显示进度
         with lock:

@@ -4,10 +4,14 @@ import pandas as pd
 import matplotlib
 matplotlib.use('Agg')  # 设置后端为非交互式 Agg
 import matplotlib.pyplot as plt
+import os
+
 def plt_drawing(audio_path):
-    base_name = f"data_stft/{audio_path.split('/')[1].rsplit('.', 1)[0]}"
-    csv_input = f"{base_name}/frequency_energy.csv"
-    png_output= f"{base_name}/frequency_energy.png"
+    # 使用os.path.basename和os.path.join确保跨平台兼容性
+    base_name = os.path.basename(audio_path).rsplit('.', 1)[0]
+    output_dir = os.path.join("data_stft", base_name)
+    csv_input = os.path.join(output_dir, "frequency_energy.csv")
+    png_output = os.path.join(output_dir, "frequency_energy.png")
 
     # 读取CSV文件 - 使用header=0将第一行作为列名
     df = pd.read_csv(csv_input, header=0, encoding='utf-8')
