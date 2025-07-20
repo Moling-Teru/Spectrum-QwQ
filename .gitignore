@@ -23,7 +23,6 @@ __pycache__
 testcode/aweight.py
 testcode/subprocesstest.py
 exportToHTML
-um.exe
 .venv
 ffmpeg
 data_stft_time

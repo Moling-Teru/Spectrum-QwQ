@@ -17,7 +17,7 @@ def encryption(folder_path):
     # 根据操作系统选择合适的可执行文件
     system = platform.system()
     if system == "Windows":
-        exe_name = 'um.exe'
+        raise RuntimeError('Not using the right system version. (Currently Linux)')
     else:  # Linux和其他Unix系统
         exe_name = 'um'  # Linux下通常不需要.exe扩展名
 
