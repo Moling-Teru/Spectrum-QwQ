@@ -124,7 +124,7 @@ def process_music_file(name):
         time_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         name_new = re.sub(r'[<>:"/\\|?*]', '', name).rsplit('.', 1)[0]  # 文件夹名称
         if os.path.exists(f'data_stft/{name_new}'):  # 检查文件夹是否存在
-            os.rmdir(f'music_stft/{name_new}')  # 删除文件
+            os.rmdir(f'data_stft/{name_new}')  # 删除文件
             log_queue.put(f'{time_str}: 已删除 {name} 重新处理。\n')
 
         log_message = f'{time_str}: Processing file: {name}\n'
