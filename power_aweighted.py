@@ -86,8 +86,8 @@ def calculate_frequency_energies(audio_file, freq_min=0, freq_max=4000, freq_ste
     print(f"计算{len(frequencies)}个频率点的能量...")
     # 为每个目标频率计算能量
     for i, target_freq in enumerate(frequencies):
-        if i % 500 == 0:  # 每计算500个频率显示一次进度
-            print(f"进度: {i}/{len(frequencies)}")
+        #if i % 500 == 0:  # 每计算500个频率显示一次进度
+            #print(f"进度: {i}/{len(frequencies)}")  为避免日志冲刷，暂时移除。
 
         # 找到目标频率对应的bin索引
         target_bin_indices = np.where(np.abs(freq_bins - target_freq) <= freq_tolerance)[0]
@@ -123,14 +123,13 @@ def save_to_csv(frequencies, energies, energies_aweighted, output_file, output_f
         output_file_aweighted: A计权能量CSV输出文件路径
     """
     # 保存原始能量数据
-    '''
+
     with open(output_file, 'w', newline='', encoding='utf-8') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(frequencies)  # 第一行：频率
         writer.writerow(energies)  # 第二行：能量
 
     print(f"原始能量数据已保存到: {output_file}")
-    '''
     
     # 保存A计权能量数据
     with open(output_file_aweighted, 'w', newline='', encoding='utf-8') as csvfile:
@@ -198,6 +197,12 @@ def main(audio):
     base_name = f"data_stft/{audio_file.split('/')[1].rsplit('.', 1)[0]}"
     csv_output = f"{base_name}/frequency_energy.csv"
     csv_output_aweighted = f"{base_name}/frequency_energy_aweighted.csv"
+
+    # 在main函数中添加调试日志
+    print(f"音频文件路径: {audio_file}")
+    print(f"生成的基础名称: {base_name}")
+    print(f"CSV输出路径: {csv_output}")
+    print(f"A计权CSV输出路径: {csv_output_aweighted}")
 
     # 计算频率能量
     print(f"Song{audio_file}- 开始分析音频文件...")

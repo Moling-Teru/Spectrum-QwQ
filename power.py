@@ -54,8 +54,8 @@ def calculate_frequency_energies(audio_file, freq_min=0, freq_max=4000, freq_ste
     print(f"计算{len(frequencies)}个频率点的能量...")
     # 为每个目标频率计算能量
     for i, target_freq in enumerate(frequencies):
-        if i % 500 == 0:  # 每计算500个频率显示一次进度
-            print(f"进度: {i}/{len(frequencies)}")
+        #if i % 500 == 0:  # 每计算500个频率显示一次进度
+            #print(f"进度: {i}/{len(frequencies)}")
 
         # 找到目标频率对应的bin索引
         target_bin_indices = np.where(np.abs(freq_bins - target_freq) <= freq_tolerance)[0]
@@ -105,7 +105,7 @@ def main(audio):
     # 获取输出路径 - 使用os.path.join确保跨平台兼容性
     base_name = os.path.basename(audio_file).rsplit('.', 1)[0]
     output_dir = os.path.join("data_stft", base_name)
-    output_path = os.path.join(output_dir, "power.csv")
+    output_path = os.path.join(output_dir, "frequency_energy.csv")
 
     # 计算频率能量
     print(f"Song{audio_file}- 开始分析音频文件...")
@@ -116,4 +116,3 @@ def main(audio):
 
     print(f"能量数据已保存到: {output_path}")
     print(f"Song{audio_file}- 分析完成!")
-    main(audio_file)

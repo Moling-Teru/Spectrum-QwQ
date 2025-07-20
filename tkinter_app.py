@@ -75,7 +75,7 @@ def format_files():
     if not os.path.exists('log_stft'):
         os.mkdir('log_stft')
         
-    with open(f'log_stft/log_main.txt', 'a', encoding='utf-8') as file:
+    with open(f'log_stft/log_main', 'a', encoding='utf-8') as file:
         file.write(log_message)
     
     log_queue.put(log_message)
@@ -91,7 +91,7 @@ def encry():
     if not os.path.exists('log_stft'):
         os.mkdir('log_stft')
 
-    with open(f'log_stft/log_main.txt', 'a', encoding='utf-8') as file:
+    with open(f'log_stft/log_main', 'a', encoding='utf-8') as file:
         file.write(log_message)
 
     log_queue.put(log_message)
@@ -131,13 +131,13 @@ def process_music_file(name):
         time_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
         name_new = re.sub(r'[<>:"/\\|?*]', '', name).rsplit('.', 1)[0]  # 文件夹名称
         if os.path.exists(f'data_stft/{name_new}'):  # 检查文件夹是否存在
-            os.rmdir(f'music_stft/{name_new}')  # 删除文件
+            shutil.rmtree(f'data_stft/{name_new}')  # 删除文件
             log_queue.put(f'{time_str}: 已删除 {name} 重新处理。\n')
 
         log_message = f'{time_str}: Processing file: {name}\n'
         log_queue.put(log_message)
         
-        with open(f'log_stft/log_{name_new}.txt', 'a', encoding='utf-8') as file:
+        with open(f'log_stft/log_{name_new}', 'a', encoding='utf-8') as file:
             file.write(f'{time_str}: Program Starting.\n')
             folder = f'data_stft/{name_new}'  # 目标文件夹
             os.makedirs(folder, exist_ok=True)
@@ -302,14 +302,14 @@ def worker_function():
             
             # 写入日志
             time_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            with open(f'log_stft/log_main.txt', 'a', encoding='utf-8') as file:
+            with open(f'log_stft/log_main', 'a', encoding='utf-8') as file:
                 file.write(f'{time_str}: Program Finished Successfully!\n')
         else:
             log_queue.put("处理被用户中断\n")
             
             # 写入日志
             time_str = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            with open(f'log_stft/log_main.txt', 'a', encoding='utf-8') as file:
+            with open(f'log_stft/log_main', 'a', encoding='utf-8') as file:
                 file.write(f'{time_str}: Program Stopped by user!\n')
     
     except Exception as e:
