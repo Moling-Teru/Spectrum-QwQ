@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spectrum分析工具</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="icon" href="../icon.png" type="image/png">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎵 Spectrum分析工具</h1>
+        </header>
+
+        <!-- 控制区域 -->
+        <div class="control-section">
+            <div class="button-group">
+                <button id="startBtn" class="btn btn-primary">开始处理</button>
+                <button id="pauseBtn" class="btn btn-secondary" disabled>暂停</button>
+                <button id="stopBtn" class="btn btn-danger">停止</button>
+            </div>
+            
+            <div class="status-group">
+                <span id="statusLabel" class="status">状态: 空闲</span>
+                <span id="cpuLabel" class="cpu-usage">CPU使用率: 0.0%</span>
+            </div>
+        </div>
+
+        <!-- 文件类型选择 -->
+        <div class="file-type-section">
+            <span class="label">处理打开文件类型:</span>
+            <div class="file-type-buttons">
+                <button class="file-type-btn active" data-type="music">音乐文件类</button>
+                <button class="file-type-btn" data-type="data">数据文件类</button>
+                <button class="file-type-btn" data-type="log">日志文件类</button>
+            </div>
+        </div>
+
+        <!-- 快捷文件夹 -->
+        <div class="folder-section">
+            <span class="label">快捷打开文件夹:</span>
+            <div class="folder-buttons">
+                <button class="folder-btn" data-folder="music_stft">音乐文件夹</button>
+                <button class="folder-btn" data-folder="data_stft">数据文件夹</button>
+                <button class="folder-btn" data-folder="log_stft">日志文件夹</button>
+            </div>
+        </div>
+
+        <!-- 线程控制 -->
+        <div class="thread-section">
+            <span class="label">处理线程数: <span id="threadCount">4</span></span>
+            <input type="range" id="threadSlider" min="1" max="8" value="4" class="thread-slider">
+        </div>
+
+        <!-- 进度条 -->
+        <div class="progress-section">
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div id="progressFill" class="progress-fill"></div>
+                </div>
+                <span id="progressLabel" class="progress-label">进度: 0/0 (0.0%)</span>
+            </div>
+            <div class="progress-details">
+                <span>处理进程数: <span id="processCount">4</span></span>
+            </div>
+        </div>
+
+        <!-- 处理日志 -->
+        <div class="log-section">
+            <div class="log-header">
+                <h3>处理日志</h3>
+                <button id="clearLogBtn" class="btn btn-small">清空日志</button>
+            </div>
+            <div id="logContainer" class="log-container">
+                <div class="log-message">工具已启动，点击'开始处理'按钮开始处理音乐文件</div>
+                <div class="log-message">请确保'music_stft'目录中已放入要处理的音频文件</div>
+                <div class="log-message">目录已存在: music_stft</div>
+                <div class="log-message">目录已存在: data_stft</div>
+                <div class="log-message">目录已存在: log_stft</div>
+            </div>
+        </div>
+
+        <!-- 文件上传区域 -->
+        <div class="upload-section">
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-content">
+                    <div class="upload-icon">📁</div>
+                    <p>拖拽音频文件到此处或点击选择文件</p>
+                    <input type="file" id="fileInput" multiple accept="audio/*" style="display: none;">
+                    <button class="btn btn-outline" onclick="document.getElementById('fileInput').click()">选择文件</button>
+                </div>
+            </div>
+            <div id="fileList" class="file-list"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

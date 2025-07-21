@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spectrum分析工具 - 启动页</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0;
+            color: #333;
+        }
+        
+        .launcher {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 20px;
+            padding: 40px;
+            text-align: center;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+        }
+        
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 30px;
+            font-size: 2.5rem;
+        }
+        
+        .option {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+            color: inherit;
+        }
+        
+        .option:hover {
+            border-color: #667eea;
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(102, 126, 234, 0.3);
+        }
+        
+        .option h3 {
+            margin: 0 0 10px 0;
+            color: #667eea;
+            font-size: 1.3rem;
+        }
+        
+        .option p {
+            margin: 0;
+            color: #6c757d;
+            line-height: 1.6;
+        }
+        
+        .badge {
+            display: inline-block;
+            background: #28a745;
+            color: white;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            margin-left: 10px;
+        }
+        
+        .badge.advanced {
+            background: #007bff;
+        }
+        
+        .instructions {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin-top: 30px;
+            text-align: left;
+        }
+        
+        .instructions h4 {
+            margin-top: 0;
+            color: #495057;
+        }
+        
+        .instructions ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        
+        .instructions li {
+            margin: 5px 0;
+            color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <div class="launcher">
+        <h1>🎵 Spectrum分析工具</h1>
+        
+        <a href="index.html" class="option" onclick="return checkSimpleMode()">
+            <h3>简单模式 <span class="badge">推荐</span></h3>
+            <p>纯前端版本，直接在浏览器中运行，模拟处理过程。适合快速体验和界面预览。</p>
+        </a>
+        
+        <a href="#" class="option" onclick="showAdvancedInstructions()">
+            <h3>完整模式 <span class="badge advanced">高级</span></h3>
+            <p>需要启动后端服务器，支持真实的文件上传和处理。适合实际音频处理工作。</p>
+        </a>
+        
+        <div class="instructions" id="instructions" style="display: none;">
+            <h4>启动完整模式：</h4>
+            <ul>
+                <li>确保已安装 Python 3.7+</li>
+                <li>双击运行 <code>start_server.bat</code></li>
+                <li>或手动运行：<code>python app.py</code></li>
+                <li>浏览器访问：<a href="http://localhost:5000" target="_blank">http://localhost:5000</a></li>
+            </ul>
+            
+            <h4>依赖安装：</h4>
+            <ul>
+                <li>pip install flask flask-cors psutil</li>
+            </ul>
+        </div>
+    </div>
+    
+    <script>
+        function checkSimpleMode() {
+            // 修改 index.html 使用简单模式脚本
+            return true;
+        }
+        
+        function showAdvancedInstructions() {
+            const instructions = document.getElementById('instructions');
+            instructions.style.display = instructions.style.display === 'none' ? 'block' : 'none';
+            return false;
+        }
+    </script>
+</body>
+</html>
