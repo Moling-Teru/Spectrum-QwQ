@@ -26,3 +26,4 @@ exportToHTML
 .venv
 ffmpeg
 data_stft_time
+log.txt
