@@ -424,8 +424,8 @@ if __name__ == "__main__":
     else:
         # 显示使用帮助
         print("音频频谱分析工具")
-        print("使用方法: python tkinter_app.py start [-t <线程数>]")
-        print("示例: python tkinter_app.py start -t 8")
+        print("使用方法: python spec.py start [-t <线程数>]")
+        print("示例: python spec.py start -t 8")
         print(f"当前最大线程数: {os.cpu_count()}")
         print("请确保 'music_stft' 目录中已放入要处理的音频文件")
         if not check_modules():
