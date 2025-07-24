@@ -509,8 +509,7 @@ def check_ffmpeg_installed():
         ffmpeg_installed = True
     # 检查 C:\Windows 目录下的 ffmpeg.exe
     if not ffmpeg_installed:
-        print("错误: 未检测到 ffmpeg。请先安装 ffmpeg 或将其放到脚本目录下的 'ffmpeg' 子目录中，或在 C:\Windows 下放置 ffmpeg.exe")
-        sys.exit(1)
+        raise FileNotFoundError("错误: 未检测到 ffmpeg。运行test-ffmpeg.py以检查，或运行set_ffmpeg.bat来安装。")
 
 def on_closing():
     """关闭窗口时的处理"""
@@ -532,7 +531,11 @@ if __name__ == "__main__":
         input("按回车键继续...")
 
     # 检查 ffmpeg 是否已经安装
-    check_ffmpeg_installed()
+    try:
+        check_ffmpeg_installed()
+    except FileNotFoundError as e:
+        print(str(e))
+        pass
 
     # 创建主窗口
     root = tk.Tk()
