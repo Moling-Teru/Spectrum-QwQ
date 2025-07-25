@@ -1,6 +1,6 @@
 import os
 
-def check_ffmpeg_installed():
+def check_ffmpeg_installed() -> str | None:
     """检查 ffmpeg 是否已经安装"""
     ffmpeg_installed = False
     script_dir = os.path.dirname(os.path.abspath(__file__))
@@ -19,9 +19,18 @@ def check_ffmpeg_installed():
     if not ffmpeg_installed:
         raise FileNotFoundError("ffmpeg 未安装或未找到")
 
+def test_import():
+    try:
+        import pydub
+        return "pydub 导入成功"
+    except ImportError:
+        raise ImportError("pydub导入异常。")
+
 if __name__ == "__main__":
     try:
         re=check_ffmpeg_installed()
         print(re)
-    except FileNotFoundError as e:
+        re2=test_import()
+        print(re2)
+    except (FileNotFoundError, ImportError) as e:
         print(str(e))
