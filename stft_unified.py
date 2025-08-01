@@ -87,11 +87,11 @@ def generate_spectrogram(wav_path, freq_ranges=None, hop_ms=50, step_hz=10, floo
         # 5. 图像尺寸设置 -----------------------------------------
         # 根据频率范围调整图像尺寸
         if max_freq <= 4000:
-            width, height = max(time_duration//4, 8), 4
+            width, height = max(time_duration//6, 8), 10
         elif max_freq <= 8000:
-            width, height = max(time_duration//4, 10), 6
+            width, height = max(time_duration//6, 10), 14
         else:
-            width, height = max(time_duration//4, 20), 12
+            width, height = max(time_duration//6, 20), 22
         
         # 6. 保存CSV（仅为8000Hz版本保存CSV，与原代码保持一致）---
         if max_freq == 8000:

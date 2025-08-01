@@ -59,7 +59,7 @@ spec_db  = np.maximum(spec_db, floor_db)   # 裁剪到 floor_db
 # 5. 画图 -----------------------------------------------------
 path = f"data_stft/{wav_path.split('/')[1].rsplit('.',1)[0]}"
 time=int(get_duration_librosa(wav_path))
-width=max(time//4,8)
+width=max(time//6,8)
 plt.figure(figsize=(width,12))          #等待长度动态更改修复
 plt.imshow(spec_db,
            origin="lower", aspect="auto",

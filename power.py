@@ -5,7 +5,7 @@ import csv
 import os
 
 
-def calculate_frequency_energies(audio_file, freq_min=0, freq_max=4000, freq_step=1, freq_tolerance=1.0):
+def calculate_frequency_energies(audio_file, freq_min=0, freq_max=20000, freq_step=1, freq_tolerance=1.0):
     """
     计算音频文件在指定频率范围内的能量总和
 
@@ -54,8 +54,6 @@ def calculate_frequency_energies(audio_file, freq_min=0, freq_max=4000, freq_ste
     print(f"计算{len(frequencies)}个频率点的能量...")
     # 为每个目标频率计算能量
     for i, target_freq in enumerate(frequencies):
-        if i % 500 == 0:  # 每计算500个频率显示一次进度
-            print(f"进度: {i}/{len(frequencies)}")
 
         # 找到目标频率对应的bin索引
         target_bin_indices = np.where(np.abs(freq_bins - target_freq) <= freq_tolerance)[0]

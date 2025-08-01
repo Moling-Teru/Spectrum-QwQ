@@ -35,7 +35,7 @@ def a_weighting(frequencies):
     return 10 ** (a_weights / 20)
 
 
-def calculate_frequency_energies(audio_file, freq_min=0, freq_max=4000, freq_step=1, freq_tolerance=3, apply_aweighting=True):
+def calculate_frequency_energies(audio_file, freq_min=0, freq_max=20000, freq_step=1, freq_tolerance=3, apply_aweighting=True):
     """
     计算音频文件在指定频率范围内的能量总和
     可选择是否应用人耳听觉特征曲线(A计权)调整
@@ -86,8 +86,6 @@ def calculate_frequency_energies(audio_file, freq_min=0, freq_max=4000, freq_ste
     print(f"计算{len(frequencies)}个频率点的能量...")
     # 为每个目标频率计算能量
     for i, target_freq in enumerate(frequencies):
-        if i % 500 == 0:  # 每计算500个频率显示一次进度
-            print(f"进度: {i}/{len(frequencies)}")
 
         # 找到目标频率对应的bin索引
         target_bin_indices = np.where(np.abs(freq_bins - target_freq) <= freq_tolerance)[0]
@@ -159,19 +157,21 @@ def plot_aweighted_relative_energy(frequencies, energies_aweighted, output_folde
     max_freq = frequencies[max_index]
     
     # 绘图
-    plt.figure(figsize=(16, 9))
+    plt.figure(figsize=(21, 9))  #todo: 记得改这里的坐标范围
+    plt.yscale('log')
+    plt.xscale('log')
     plt.plot(frequencies, relative_energy, color='b')
-    plt.xlim(0, 4000)  # 将x轴范围限制在0-4000Hz
-    plt.ylim(0, 1.2)
-    plt.title('A-Weighted Power Data - 4000 Hz Max (1Hz Resolution)', family="Microsoft YaHei")
+    plt.xlim(20, 20000)  # 将x轴范围限制在0-4000Hz
+    plt.ylim(0, 15)
+    plt.title('A-Weighted Power Data - 20000 Hz Max (1Hz Resolution)', family="Microsoft YaHei")
     plt.xlabel('频率(Hz)', family="Microsoft YaHei")
     plt.ylabel('A计权相对能量', family="Microsoft YaHei")
     
     # 标注最大值
     plt.annotate(f'Max: {max_freq:.0f}Hz', 
                  color='b', 
-                 xy=(max_freq, 1), 
-                 xytext=(max_freq, 1.1),
+                 xy=(max_freq, 10),
+                 xytext=(max_freq, 12),
                  arrowprops=dict(facecolor='b', shrink=0.03),
                  family="Microsoft YaHei")
     
